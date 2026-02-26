@@ -23,8 +23,7 @@ export async function middleware(request: NextRequest) {
   // Protect /admin and /studio with NextAuth (credentials)
   if (pathname.startsWith("/admin") || pathname.startsWith("/studio")) {
     const token = await getToken({
-      // NextAuth expects a Node request, but the edge request is compatible for our usage here.
-      req: request as unknown as Request,
+      req: request,
       secret: process.env.NEXTAUTH_SECRET,
     });
 
