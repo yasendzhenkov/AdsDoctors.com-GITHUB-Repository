@@ -6,22 +6,24 @@ import { Footer } from "@/components/layout/Footer";
 
 type Props = {
   children: ReactNode;
-  params: { locale: Locale };
+  params: Promise<{ locale: string }>;
 };
 
-export default function SiteLayout({ children, params }: Props) {
-  const dict = getDictionary(params.locale);
+export default async function SiteLayout({ children, params }: Props) {
+  const { locale } = await params;
+  const typedLocale = (locale === "bg" ? "bg" : "en") as Locale;
+  const dict = getDictionary(typedLocale);
 
   return (
     <div className="flex min-h-screen flex-col bg-white text-black">
       <Header
-        locale={params.locale}
+        locale={typedLocale}
         labels={{ brand: dict.brand.name, nav: dict.nav }}
       />
       <main className="flex-1">
         <div className="grid-page">{children}</div>
       </main>
-      <Footer locale={params.locale} labels={dict.footer} />
+      <Footer locale={typedLocale} labels={dict.footer} />
     </div>
   );
 }
